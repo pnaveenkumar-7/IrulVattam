@@ -8,12 +8,15 @@ public class ClueItem : MonoBehaviour
     public bool collected = false;
 
     public void Interact()
-    {
-        if (collected) return;
-        collected = true;
-        Debug.Log("Inspected: " + clueName + " - " + description);
+{
+    if (collected) return;
+    collected = true;
+    Debug.Log("Inspected: " + clueName + " - " + description);
 
-        if (GameState.Instance != null)
-            GameState.Instance.AddTruth(truthId);
-    }
+    if (EvidenceBoard.Instance != null)
+        EvidenceBoard.Instance.AddEntry(clueName, description, truthId);
+
+    if (GameState.Instance != null)
+        GameState.Instance.AddTruth(truthId);
+}
 }
