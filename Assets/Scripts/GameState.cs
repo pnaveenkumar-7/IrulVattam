@@ -13,6 +13,8 @@ public class GameState : MonoBehaviour
     public int trustPoints = 0;     // goes up/down with dialogue choices
     public int echoUses = 0;
 
+    public bool showDebug = true;
+
     public Level Trust => trustPoints >= 3 ? Level.High : trustPoints >= 1 ? Level.Medium : Level.Low;
     public Level EchoExposure => echoUses >= 5 ? Level.High : Level.Low;
 
@@ -21,6 +23,15 @@ public class GameState : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Update()
+    {
+        // Test keys: remove or disable before release
+        if (Input.GetKeyDown(KeyCode.F1)) ChangeTrust(1);
+        if (Input.GetKeyDown(KeyCode.F2)) ChangeTrust(-1);
+        if (Input.GetKeyDown(KeyCode.F3)) UseEcho();
+        if (Input.GetKeyDown(KeyCode.F4)) EndingScreen.Show();
     }
 
     public bool Has(string id) => truthFound.Contains(id);
@@ -48,5 +59,12 @@ public class GameState : MonoBehaviour
     public bool CanGetNewCircle()
     {
         return true; // always available as the fallback
+    }
+
+    void OnGUI()
+    {
+        if (!showDebug) return;
+        GUI.Label(new Rect(20, 50, 400, 25), "Truth: " + Truth + "/7   Trust: " + Trust + "   Echo: " + EchoExposure);
+        GUI.Label(new Rect(20, 75, 400, 25), "Silence: " + CanGetSilence() + "   Unremembered: " + CanGetUnremembered());
     }
 }

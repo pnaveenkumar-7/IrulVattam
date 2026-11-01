@@ -49,22 +49,23 @@ public class FirstPersonController : MonoBehaviour
         Vector3 move = input * walkSpeed + Vector3.up * yVelocity;
         controller.Move(move * Time.deltaTime);
     }
-   void TryInteract()
-{
-    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-    if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
+
+    void TryInteract()
     {
-        ClueItem clue = hit.collider.GetComponentInParent<ClueItem>();
-        if (clue != null) { clue.Interact(); return; }
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
+        {
+            ClueItem clue = hit.collider.GetComponentInParent<ClueItem>();
+            if (clue != null) { clue.Interact(); return; }
 
-        BatteryPickup battery = hit.collider.GetComponentInParent<BatteryPickup>();
-        if (battery != null) { battery.Interact(); return; }
+            BatteryPickup battery = hit.collider.GetComponentInParent<BatteryPickup>();
+            if (battery != null) { battery.Interact(); return; }
 
-        KeyPickup key = hit.collider.GetComponentInParent<KeyPickup>();
-        if (key != null) { key.Interact(); return; }
+            KeyPickup key = hit.collider.GetComponentInParent<KeyPickup>();
+            if (key != null) { key.Interact(); return; }
 
-        Door door = hit.collider.GetComponentInParent<Door>();
-        if (door != null) door.Interact();
+            Door door = hit.collider.GetComponentInParent<Door>();
+            if (door != null) door.Interact();
+        }
     }
-}
 }
