@@ -49,16 +49,22 @@ public class FirstPersonController : MonoBehaviour
         Vector3 move = input * walkSpeed + Vector3.up * yVelocity;
         controller.Move(move * Time.deltaTime);
     }
-    void TryInteract()
+   void TryInteract()
+{
+    Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+    if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
     {
-      Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-     if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
-     {
-        ClueItem clue = hit.collider.GetComponent<ClueItem>();
+        ClueItem clue = hit.collider.GetComponentInParent<ClueItem>();
         if (clue != null) { clue.Interact(); return; }
 
-        BatteryPickup battery = hit.collider.GetComponent<BatteryPickup>();
-        if (battery != null) battery.Interact();
-     }
+        BatteryPickup battery = hit.collider.GetComponentInParent<BatteryPickup>();
+        if (battery != null) { battery.Interact(); return; }
+
+        KeyPickup key = hit.collider.GetComponentInParent<KeyPickup>();
+        if (key != null) { key.Interact(); return; }
+
+        Door door = hit.collider.GetComponentInParent<Door>();
+        if (door != null) door.Interact();
     }
+}
 }
